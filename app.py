@@ -6,6 +6,7 @@ import torch
 from transformers import PreTrainedTokenizerFast, BartForConditionalGeneration
 from typing import Optional
 import os
+import uuid  # 고유한 파일명을 위한 UUID 모듈 추가
 
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
@@ -106,13 +107,14 @@ async def receive_answer(item: Item):
     # 텍스트와 요약 결과를 토큰화하여 결합
     combined_text = tokenize_and_combine(text, summary)
     
-    # 워드클라우드 이미지 파일 경로 설정
-    wordcloud_filepath = "wordcloud.png"
+    # 고유한 워드클라우드 이미지 파일 경로 설정
+    wordcloud_filename = f"wordcloud_{uuid.uuid4().hex}.png"
+    wordcloud_filepath = os.path.join(base_dir, wordcloud_filename)
     
     # 워드클라우드 생성 및 파일 저장
     create_wordcloud(combined_text, wordcloud_filepath)
 
-    return {"result": summary}
+    return {"result": summary, "wordcloud_filename": wordcloud_filename}
 
 # Uvicorn을 사용하여 서버 실행을 위한 메인 가드
 if __name__ == "__main__":
