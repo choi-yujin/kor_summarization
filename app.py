@@ -24,7 +24,7 @@ app = FastAPI()
 
 # 현재 파일의 디렉토리를 기준으로 상대 경로 설정해 model_path에 kobart_summary 폴더의 경로 전달
 base_dir = os.path.dirname(os.path.abspath(__file__))
-model_path = os.path.join(base_dir, 'kobart_summary')
+model_path = '/home/ubuntu/kor_summarization/kobart_summary'
 tokenizer_path = 'gogamza/kobart-base-v2'
 
 # 모델과 토크나이저 로드
@@ -35,9 +35,9 @@ tokenizer = PreTrainedTokenizerFast.from_pretrained(tokenizer_path)
 okt = Okt()
 
 # 백엔드 서버 URL (환경변수에서 읽어오기)
-BACKEND_URL = os.getenv("BACKEND_URL", "http://52.79.243.59:3000")
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:3000")
 
-# 요청 데이터 모델
+# 요청 데이터 모델,
 class Item(BaseModel):
     text: Optional[str] = None
 
@@ -113,7 +113,8 @@ async def receive_answer(item: Item):
     
     # 워드클라우드 생성 및 파일 저장
     create_wordcloud(combined_text, wordcloud_filepath)
-     # URL 생성 (백엔드에서 접근 가능하도록)
+
+     # URL 생성 (백엔드에서 접근 가능하도록)    
     wordcloud_url = f"{BACKEND_URL}/uploads/{wordcloud_filename}"
 
     return {"result": summary, "wordcloud_url": wordcloud_url}
