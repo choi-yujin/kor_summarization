@@ -35,7 +35,7 @@ tokenizer = PreTrainedTokenizerFast.from_pretrained(tokenizer_path)
 okt = Okt()
 
 # 백엔드 서버 URL (환경변수에서 읽어오기)
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:3000")
+BACKEND_URL = os.getenv("BACKEND_URL", "http://52.79.243.59:3000")
 
 # 요청 데이터 모델
 class Item(BaseModel):
@@ -113,8 +113,10 @@ async def receive_answer(item: Item):
     
     # 워드클라우드 생성 및 파일 저장
     create_wordcloud(combined_text, wordcloud_filepath)
+     # URL 생성 (백엔드에서 접근 가능하도록)
+    wordcloud_url = f"{BACKEND_URL}/uploads/{wordcloud_filename}"
 
-    return {"result": summary, "wordcloud_filename": wordcloud_filename}
+    return {"result": summary, "wordcloud_url": wordcloud_url}
 
 # Uvicorn을 사용하여 서버 실행을 위한 메인 가드
 if __name__ == "__main__":
