@@ -118,6 +118,7 @@ async def receive_answer(item: Item):
     wordcloud_url = f"{BACKEND_URL}/uploads/{wordcloud_filename}"
 
     return {"result": summary, "wordcloud_url": wordcloud_url}
+    
 
 # Uvicorn을 사용하여 서버 실행을 위한 메인 가드
 if __name__ == "__main__":
